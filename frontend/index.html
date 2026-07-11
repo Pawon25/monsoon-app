@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Varsha Sahayak — Monsoon Preparedness &amp; Citizen Assistance</title>
+<meta name="description" content="GenAI-powered monsoon preparedness plans, live weather guidance, checklists, travel advisories, safety recommendations, and real-time alerts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- Live alert banner: hidden until real alerts arrive, ARIA-assertive so screen readers announce immediately -->
+<div id="alert-banner" class="alert-banner" role="alert" aria-live="assertive" hidden>
+  <div class="alert-banner__inner">
+    <span class="alert-banner__icon" aria-hidden="true">⚠</span>
+    <div id="alert-banner-content" class="alert-banner__content"></div>
+    <button id="alert-banner-dismiss" class="alert-banner__dismiss" type="button" aria-label="Dismiss alert">✕</button>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="rain-signature" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="hero__inner">
+    <p class="hero__eyebrow">H2S PromptWars — GenAI Civic Assistance</p>
+    <h1 class="hero__title">वर्षा सहायक <span class="hero__title-en">Varsha Sahayak</span></h1>
+    <p class="hero__subtitle">Your monsoon co-pilot: personalized prep plans, live weather-grounded guidance, checklists, travel advisories, and real-time severe weather alerts — in your language.</p>
+  </div>
+</header>
+
+<main id="main-content">
+
+  <!-- Global context: location + language, shared across every feature -->
+  <section class="panel context-panel" aria-labelledby="context-heading">
+    <h2 id="context-heading" class="panel__title">Your location &amp; language</h2>
+    <form id="context-form" class="context-form">
+      <div class="field">
+        <label for="city">City <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="city" name="city" required maxlength="100" autocomplete="address-level2" placeholder="e.g. Bengaluru">
+      </div>
+      <div class="field">
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" maxlength="100" autocomplete="address-level1" placeholder="e.g. Karnataka">
+      </div>
+      <div class="field">
+        <label for="language">Output language</label>
+        <select id="language" name="language">
+          <option value="English">English</option>
+          <option value="Hindi">हिंदी (Hindi)</option>
+          <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+          <option value="Marathi">मराठी (Marathi)</option>
+          <option value="Bengali">বাংলা (Bengali)</option>
+          <option value="Tamil">தமிழ் (Tamil)</option>
+          <option value="Telugu">తెలుగు (Telugu)</option>
+          <option value="Malayalam">മലയാളം (Malayalam)</option>
+          <option value="other">Other (type below)</option>
+        </select>
+      </div>
+      <div class="field" id="custom-language-field" hidden>
+        <label for="custom-language">Type your language</label>
+        <input type="text" id="custom-language" name="custom-language" maxlength="40" placeholder="e.g. Gujarati, Punjabi, Odia...">
+      </div>
+      <div class="field field--action">
+        <button type="submit" class="btn btn--primary">Set location</button>
+      </div>
+    </form>
+    <p id="context-status" class="context-status" role="status" aria-live="polite"></p>
+  </section>
+
+  <!-- Feature 2: weather-aware guidance (live current conditions) -->
+  <section class="panel weather-panel" aria-labelledby="weather-heading">
+    <h2 id="weather-heading" class="panel__title">Current conditions</h2>
+    <div id="weather-card" class="weather-card" aria-live="polite">
+      <p class="placeholder-text">Set your location above to see live weather.</p>
+    </div>
+  </section>
+
+  <!-- Feature tabs -->
+  <nav class="tabs" aria-label="Monsoon assistance features">
+    <button class="tab" type="button" data-tab="plan" aria-selected="true" role="tab">Preparedness plan</button>
+    <button class="tab" type="button" data-tab="checklist" aria-selected="false" role="tab">Checklist</button>
+    <button class="tab" type="button" data-tab="advisory" aria-selected="false" role="tab">Travel advisory</button>
+    <button class="tab" type="button" data-tab="safety" aria-selected="false" role="tab">Safety guidance</button>
+  </nav>
+
+  <!-- Feature 1: Preparedness plan -->
+  <section id="tab-plan" class="panel tab-panel" role="tabpanel" aria-labelledby="plan-heading">
+    <h2 id="plan-heading" class="panel__title">Personalized preparedness plan</h2>
+    <form id="plan-form" class="feature-form">
+      <fieldset class="household-fields">
+        <legend>Household details</legend>
+        <div class="field">
+          <label for="plan-household-size">Household size</label>
+          <input type="number" id="plan-household-size" min="1" max="30" value="1">
+        </div>
+        <div class="field">
+          <label for="plan-dwelling">Dwelling type</label>
+          <input type="text" id="plan-dwelling" maxlength="50" placeholder="e.g. ground-floor apartment">
+        </div>
+        <div class="field">
+          <label for="plan-risk">Self-assessed risk level</label>
+          <select id="plan-risk">
+            <option value="low">Low</option>
+            <option value="moderate" selected>Moderate</option>
+            <option value="high">High</option>
+            <option value="severe">Severe</option>
+          </select>
+        </div>
+        <div class="field field--checks">
+          <span class="field__group-label">Household includes:</span>
+          <label class="checkbox"><input type="checkbox" id="plan-children"> Children</label>
+          <label class="checkbox"><input type="checkbox" id="plan-elderly"> Elderly members</label>
+          <label class="checkbox"><input type="checkbox" id="plan-pets"> Pets</label>
+          <label class="checkbox"><input type="checkbox" id="plan-disabled"> Members with disabilities</label>
+        </div>
+        <div class="field field--wide">
+          <label for="plan-notes">Anything else we should know? (optional)</label>
+          <textarea id="plan-notes" maxlength="500" rows="2" placeholder="e.g. lives near a river, on ground floor..."></textarea>
+        </div>
+      </fieldset>
+      <button type="submit" class="btn btn--primary">Generate my plan</button>
+    </form>
+    <div id="plan-result" class="result-area" aria-live="polite"></div>
+  </section>
+
+  <!-- Feature 3: Checklist -->
+  <section id="tab-checklist" class="panel tab-panel" role="tabpanel" aria-labelledby="checklist-heading" hidden>
+    <h2 id="checklist-heading" class="panel__title">Emergency checklist</h2>
+    <form id="checklist-form" class="feature-form">
+      <fieldset class="household-fields">
+        <legend>Household details</legend>
+        <div class="field">
+          <label for="checklist-household-size">Household size</label>
+          <input type="number" id="checklist-household-size" min="1" max="30" value="1">
+        </div>
+        <div class="field">
+          <label for="checklist-risk">Self-assessed risk level</label>
+          <select id="checklist-risk">
+            <option value="low">Low</option>
+            <option value="moderate" selected>Moderate</option>
+            <option value="high">High</option>
+            <option value="severe">Severe</option>
+          </select>
+        </div>
+        <div class="field field--checks">
+          <span class="field__group-label">Household includes:</span>
+          <label class="checkbox"><input type="checkbox" id="checklist-children"> Children</label>
+          <label class="checkbox"><input type="checkbox" id="checklist-elderly"> Elderly members</label>
+          <label class="checkbox"><input type="checkbox" id="checklist-pets"> Pets</label>
+        </div>
+      </fieldset>
+      <button type="submit" class="btn btn--primary">Generate checklist</button>
+    </form>
+    <div id="checklist-result" class="result-area" aria-live="polite"></div>
+  </section>
+
+  <!-- Feature 4: Travel advisory -->
+  <section id="tab-advisory" class="panel tab-panel" role="tabpanel" aria-labelledby="advisory-heading" hidden>
+    <h2 id="advisory-heading" class="panel__title">Travel advisory</h2>
+    <form id="advisory-form" class="feature-form">
+      <div class="field">
+        <label for="advisory-destination-city">Destination city <span class="req" aria-hidden="true">*</span></label>
+        <input type="text" id="advisory-destination-city" required maxlength="100" placeholder="e.g. Chennai">
+      </div>
+      <div class="field">
+        <label for="advisory-destination-state">Destination state</label>
+        <input type="text" id="advisory-destination-state" maxlength="100" placeholder="e.g. Tamil Nadu">
+      </div>
+      <div class="field">
+        <label for="advisory-mode">Mode of travel</label>
+        <select id="advisory-mode">
+          <option value="">Not specified</option>
+          <option value="car">Car</option>
+          <option value="bus">Bus</option>
+          <option value="train">Train</option>
+          <option value="flight">Flight</option>
+          <option value="two-wheeler">Two-wheeler</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="advisory-date">Travel date</label>
+        <input type="date" id="advisory-date">
+      </div>
+      <button type="submit" class="btn btn--primary">Get advisory</button>
+    </form>
+    <div id="advisory-result" class="result-area" aria-live="polite"></div>
+  </section>
+
+  <!-- Feature 5: Safety recommendation -->
+  <section id="tab-safety" class="panel tab-panel" role="tabpanel" aria-labelledby="safety-heading" hidden>
+    <h2 id="safety-heading" class="panel__title">Situational safety guidance</h2>
+    <p class="panel__hint">For active or imminent severe weather — more urgent and specific than the general prep plan.</p>
+    <form id="safety-form" class="feature-form">
+      <div class="field field--wide">
+        <label for="safety-situation">What's happening right now? (optional but helps a lot)</label>
+        <textarea id="safety-situation" maxlength="300" rows="2" placeholder="e.g. water entering the ground floor, heavy waterlogging on our street..."></textarea>
+      </div>
+      <fieldset class="household-fields">
+        <legend>Household details</legend>
+        <div class="field">
+          <label for="safety-household-size">Household size</label>
+          <input type="number" id="safety-household-size" min="1" max="30" value="1">
+        </div>
+        <div class="field field--checks">
+          <span class="field__group-label">Household includes:</span>
+          <label class="checkbox"><input type="checkbox" id="safety-children"> Children</label>
+          <label class="checkbox"><input type="checkbox" id="safety-elderly"> Elderly members</label>
+          <label class="checkbox"><input type="checkbox" id="safety-disabled"> Members with disabilities</label>
+        </div>
+      </fieldset>
+      <button type="submit" class="btn btn--urgent">Get immediate guidance</button>
+    </form>
+    <div id="safety-result" class="result-area" aria-live="polite"></div>
+  </section>
+
+  <p class="disclaimer">Varsha Sahayak provides AI-generated guidance to support, not replace, official advisories from IMD, NDMA, and local authorities. In a life-threatening emergency, contact local emergency services immediately.</p>
+
+</main>
+
+<footer class="site-footer">
+  <p>Built for H2S PromptWars — Monsoon Preparedness &amp; Citizen Assistance Challenge.</p>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
