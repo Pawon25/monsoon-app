@@ -222,7 +222,8 @@ function renderLoading(container, message) {
 function renderTextResult(container, data) {
   const card = document.createElement("div");
   card.className = "result-card";
-  card.textContent = data.content;
+  const rawHtml = marked.parse(data.content ?? "");
+  card.innerHTML = DOMPurify.sanitize(rawHtml);
   container.innerHTML = "";
   container.appendChild(card);
 }
